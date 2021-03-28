@@ -14,19 +14,35 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> trackinginfo = new ArrayList<String>();
-    EditText status=  findViewById(R.id.txtStatus);
-    EditText ordid = findViewById(R.id.ordid);
-    EditText trackingid = findViewById(R.id.trackingid);
-    EditText trackingids= findViewById(R.id.trackingids);
-    Button  cancelbutton = findViewById(R.id.Cancel);
+    EditText ordid ;
+    EditText trackingid ;
+    EditText trackingids;
+    EditText status;
+    Button  cancelbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ordid = findViewById(R.id.ordid);
+        trackingid = findViewById(R.id.trackingid);
+        trackingids= findViewById(R.id.trackingids);
+        status= findViewById(R.id.txtStatus);
 
+        ordid.setOnKeyListener((new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((keyCode == KeyEvent.KEYCODE_ENTER))
+                {
+                    status.setText("");
 
+                }
+                return false;
+
+            }
+
+        }));
         trackingid.setOnKeyListener((new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -61,12 +77,18 @@ public class MainActivity extends AppCompatActivity {
         }));
 
     }
-
-    public void onCancelClick(View v)
-    {
-        status.setText("Canceled!");
-        ordid.setText("");;
-        trackinginfo.clear();
-        trackingids.setText("");
+    public void onCancelClick(View v) {
+        status.setText("Cancel!");
+        ClearContent();
     }
+
+    public void ClearContent(){
+        trackinginfo.clear();
+        ordid.setText("");
+        trackingid.setText("");
+        trackingids.setText("");
+        ordid.requestFocus();
+    }
+
+
 }

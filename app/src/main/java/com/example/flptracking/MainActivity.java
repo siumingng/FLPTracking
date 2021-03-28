@@ -14,16 +14,18 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> trackinginfo = new ArrayList<String>();
+    EditText status=  findViewById(R.id.txtStatus);
+    EditText ordid = findViewById(R.id.ordid);
+    EditText trackingid = findViewById(R.id.trackingid);
+    EditText trackingids= findViewById(R.id.trackingids);
+    Button  cancelbutton = findViewById(R.id.Cancel);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText ordid = findViewById(R.id.ordid);
-        EditText trackingid = findViewById(R.id.trackingid);
-        EditText trackingids= findViewById(R.id.trackingids);
-        Button  cancelbutton = findViewById(R.id.Cancel);
+
 
         trackingid.setOnKeyListener((new View.OnKeyListener() {
             @Override
@@ -58,5 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         }));
 
+    }
+
+    public void onCancelClick(View v)
+    {
+        status.setText("Canceled!");
+        ordid.setText("");;
+        trackinginfo.clear();
+        trackingids.setText("");
     }
 }

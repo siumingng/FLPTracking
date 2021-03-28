@@ -1,13 +1,20 @@
 package com.example.flptracking;
 
+import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Presentation;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
+import java.sql.*;
+import android.os.AsyncTask;
+
 
 import java.util.ArrayList;
 
@@ -19,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     EditText trackingids;
     EditText status;
     Button  cancelbutton;
+    Button  savebutton;
+    private Connection connection = null;
+    private static String Classes = "net.sourceforge.jtds.jdbc.Driver";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
         status.setText("Cancel!");
         ClearContent();
     }
+    public void onSaveClick(View v) {
+        DBHelper savetodb = new DBHelper();
+        savetodb.execute();
+    }
 
     public void ClearContent(){
         trackinginfo.clear();
@@ -90,5 +104,53 @@ public class MainActivity extends AppCompatActivity {
         ordid.requestFocus();
     }
 
+    private class DBHelper extends AsyncTask<String,Void,String>{
+        String message;
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                String sql;
+                int n;
+                Class.forName(Classes);
+                connection= DriverManager.getConnection("jdbc:jtds:sqlserver://172.23.4.250:1433/flpndp","sa","p@ssw0rd");
+                Statement sqlcmd= connection.createStatement();
+                for (int i=0; i<trackinginfo.size();i++)
+                {
+                    sql ="Insert into tbl_tracking (ord_id,tracking_id) values (" + ordid.getText() + ", '" + trackinginfo.get(i) +"' )";
+                    n = sqlcmd.executeUpdate(sql);
+                }
+
+                message= "Records Inserted";
+            }
+            catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                message= "Error";
+            }
+            catch (SQLException e)
+            {
+                message= "Error";
+            } catch (Exception e)
+            {
+                message= "Error";
+
+            }
+            return message;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if (result=="Error")
+            {
+                status.setText(Html.fromHtml("<font color='#ff0000'>Error</font>"));
+            }else
+            {
+                status.setText(Html.fromHtml("<font color='#00ff00'>Records Saved!</font>"));
+            }
+
+            ClearContent();
+        }
+
+    }
+
 
 }
+

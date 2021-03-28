@@ -93,7 +93,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:focusable="false"
-            android:text="Save" />
+            android:text="Save"
+            android:onClick="onSaveClick"/>
     </LinearLayout>
 
     <EditText
